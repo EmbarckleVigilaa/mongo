@@ -1,0 +1,25 @@
+*{
+    background-color: rgb(220, 233, 241);
+    text-align: center;
+    
+}
+.replace{
+    
+    width: 50rem;
+    height: 25rem;
+    padding: 15px;
+    background-color: rgb(147, 203, 240);
+    box-shadow: 10px 10px 5px 12px rgb(79, 90, 94);
+    border-radius: 1rem;
+    margin-left: 18%;
+    margin-top: 7rem;
+}
+.replace h1{
+    background-color: rgb(147, 203, 240);
+}
+.replace p{
+    background-color: rgb(147, 203, 240);
+}
+.replace button{
+    background-color: rgb(147, 203, 240);
+}

@@ -1,13 +1,13 @@
 const express = require('express');
 const session = require('express-session');
-// const bcrypt = require('bcrypt');
 const Collection = require('./mongodb');
-// const { exists } = require('./mongodb');
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static('public'));
 
 app.use(
   session({
@@ -29,113 +29,114 @@ app.get('/home', (req, res) => {
   res.render('home');
 });
 
-
-
 app.post('/signup', async (req, res) => {
   try {
     const data = {
       name: req.body.name,
+      email:req.body.email,
       password: req.body.password,
       date: req.body.date,
       content: req.body.content
     };
-  
-  
+
     const existingUser = await Collection.findOne({ name: data.name });
-    
-  
+
     if (existingUser && existingUser.name === data.name) {
       return res.send('Username already exists');
     } else {
       const newUser = new Collection({
         name: data.name,
+        email:data.email,
         password: data.password,
-        date: data.date,
-        content: data.content
+        dates: [{ date: data.date, content: data.content }]
       });
-  
+
       await newUser.save();
-  
+
       req.session.user = newUser;
-  
+
       res.render('base');
     }
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred');
   }
- 
 });
-
 
 app.post('/login', async (req, res) => {
   try {
     const data = {
       name: req.body.name,
+      email:req.body.email,
       password: req.body.password,
-      date:req.body.date,
-      content:req.body.content
+      date: req.body.date,
+      content: req.body.content
     };
-      // console.log(data.date)
-    const user = await Collection.findOne({ name:data.name });
-    // console.log("User:",user)
-    // const loggedUser=user.dates;
-    // console.log("dates of that user",user.dates.length)
-    // const date = await Collection.findOne({date:data.date});
-    // console.log("Date:",date)
 
-    for(var i=0;i<user.dates.length;i++)
-    console.log("Length:",user.dates.length)
-    if(user&&user.dates[i].date===data.date) {
-      
-      {
-        console.log(user.dates[i].date)
-      }
+    const user = await Collection.findOne({ name: data.name });
 
-      const newUser = new Collection({
-        name: data.name,
-        password: data.password,
-        date: data.date,
-        content: data.content
-      });
-  // console.log("New User:",newUser)
-      user.dates.push({ date: data.date, content: data.content });
-      await user.save();
-  
-      req.session.user = user;
-  
-      res.render('home');
-    
-    }
     if (!user) {
       return res.send('Invalid username or password');
     }
-    if (data.password!=user.password) {
+    
+    if (data.email !== user.email) {
+      return res.send('Incorrect Email');
+    }     
+    if (data.password !== user.password) {
       return res.send('Invalid username or password');
     }
-    else {
-      
-      const newUser = new Collection({
-        name: data.name,
-        password: data.password,
-        date: data.date,
-        content: data.content
-      });
-  // console.log("New User:",newUser)
+    const existingDateIndex = user.dates.findIndex(
+      (dateObj) => dateObj.date === data.date
+    );
+    console.log(existingDateIndex,"existing")
+// console.log(dateObj.date,"dateobj")
+
+    if (existingDateIndex !== -1) {
+      res.render('replace-date', { user, date: data.date, content: data.content });
+    } else {
       user.dates.push({ date: data.date, content: data.content });
       await user.save();
-  
-      req.session.user = user;
-  
-      res.render('home');
-      
-    }
 
+      req.session.user = user;
+
+      res.render('home');
+    }
   } catch (error) {
     console.error('Error logging in:', error);
     res.send('Internal Server Error');
   }
 });
+
+
+app.post('/replace-date', async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const date = req.body.date;
+    const content = req.body.content;
+
+    const user = await Collection.findById(userId);
+
+    if (!user) {
+      return res.send('User not found');
+    }
+
+    const existingDateIndex = user.dates.findIndex(
+      (dateObj) => dateObj.date === date
+    );
+console.log(existingDateIndex,"existing")
+
+    if (existingDateIndex !== -1) {
+      user.dates[existingDateIndex].content = content;
+      await user.save();
+    }
+
+    res.render('home');
+  } catch (error) {   
+    console.error('Error logging in:', error);
+    res.send('Internal Server Error');
+  }
+});
+
 
 app.listen(3000, () => {
   console.log('Server started on port 3000 http://localhost:3000');

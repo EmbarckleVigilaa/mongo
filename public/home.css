@@ -1,0 +1,19 @@
+*{
+    background-color: rgb(220, 233, 241);
+    text-align: center;
+    
+}
+.data{
+    
+    width: 25rem;
+    height: 5rem;
+    padding: 15px;
+    background-color: rgb(147, 203, 240);
+    box-shadow: 10px 10px 5px 12px rgb(79, 90, 94);
+    border-radius: 1rem;
+    margin-left: 28%;
+    margin-top: 7rem;
+}
+.data h1{
+    background-color: rgb(147, 203, 240);
+}

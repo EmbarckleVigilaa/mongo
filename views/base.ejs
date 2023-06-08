@@ -5,24 +5,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in </title>
+    <link rel="stylesheet"   href="/style.css">
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>tinymce.init({selector:'textarea'});</script>
+ 
 </head>
 <body>
 
-<h1>Login Form</h1>
-
 <form action="/login" method="post" >
+    
+    <div class="container">
+        <h1>Login Form</h1>
     <input placeholder="Name" name="name" type="text" required>
+    <br><br>
+    <input placeholder="E-mail" name="email" type="email" required>
     <br><br>
     <input placeholder="Password" name="password" type="password" required>
     <br><br>
+    <h3>Dont have a account ?</h3>
+<a href="/signup">Create a new account</a>
+<br><br>
+<div class="forgetpassword">
+    <a href="#">Forget Password</a>
+</div>
+</div>
+<div class="content">
+
     <input placeholder="Date" id="date" type="date" name="date" required>
         <br><br>
-        <textarea placeholder="Type Here..." id="content" name="content" type="text" cols="50" rows="10" required></textarea>
+        <textarea
+     placeholder="Type Here..." id="content" name="content" type="text" cols="50" rows="10" required></textarea>
+    
         <br><br>
     <input class="sub" type="submit">
- <h3>Dont have a account ?</h3>
-<a href="/signup">Create a new account</a>
+</div>
+
 </form>
+<script>
+    tinymce.init({
+  selector: 'textarea#content',
+  height: 500,
+  plugins: [
+    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+    'insertdatetime', 'media', 'table', 'help', 'wordcount'
+  ],
+  toolbar: 'undo redo | blocks | ' +
+  'bold italic backcolor | alignleft aligncenter ' +
+  'alignright alignjustify | bullist numlist outdent indent | ' +
+  'removeformat | help',
+  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+});
+</script>
 </body>
 </html>
 

@@ -1,0 +1,42 @@
+*{
+    background-color: rgb(220, 233, 241);
+    text-align: center;
+    
+}
+
+.container{
+    width: 40%;
+    height: 20rem;
+    padding: 15px;
+    background-color: rgb(147, 203, 240);
+    box-shadow: 10px 10px 5px 12px rgb(79, 90, 94);
+    border-radius: 1rem;
+    position: absolute;
+    top: 10rem;
+    margin-left: 60px;
+}
+.container h1{
+    background-color: rgb(147, 203, 240);
+}
+.container h3{
+    background-color: rgb(147, 203, 240);
+}
+.container a{
+    background-color: rgb(147, 203, 240);
+}
+.content{
+    width: 40%;
+    height: 22rem;
+    background-color: rgb(147, 203, 240);
+    box-shadow: 10px 10px 5px 12px rgb(79, 90, 94);
+    border-radius: 1rem;
+    position:absolute;
+    right: 10%;
+    top: 10rem;
+}
+#date{
+    margin-top: 5%;
+}
+.forgetpassword{
+    background-color: rgb(147, 203, 240);
+}

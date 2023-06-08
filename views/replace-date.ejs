@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet"   href="/replace.css">
+  <title>Replace</title>
+  <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>tinymce.init({selector:'textarea'});</script>
+
+</head>
+<body>
+  <form method="POST" action="/replace-date">
+  <div class="replace">
+  <h1>Replace Date</h1>
+  <p>Date you have entered already exixts...</p>
+  <p>Do you wish to edit the existing data?</p>
+  
+    <input type="hidden" name="userId" value="<%= user._id %>">
+    <input type="hidden" name="date" value="<%= date %>">
+    
+    <textarea name="content" id="content" rows="4" cols="50"><%= content %></textarea><br><br>
+    <button type="submit">Replace Date</button>
+  
+    <button type="submit">No Need to Edit</button>
+  </div>
+  </form>
+  <script>
+    tinymce.init({
+  selector: 'textarea#content',
+  height: 500,
+  plugins: [
+    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+    'insertdatetime', 'media', 'table', 'help', 'wordcount'
+  ],
+  toolbar: 'undo redo | blocks | ' +
+  'bold italic backcolor | alignleft aligncenter ' +
+  'alignright alignjustify | bullist numlist outdent indent | ' +
+  'removeformat | help',
+  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+});
+</script>
+</body>
+</html>
