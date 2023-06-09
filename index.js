@@ -1,5 +1,8 @@
 const express = require('express');
 const session = require('express-session');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+const bcrypt=require('bcrypt')
 const Collection = require('./mongodb');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -27,6 +30,9 @@ app.get('/signup', (req, res) => {
 
 app.get('/home', (req, res) => {
   res.render('home');
+});
+app.get('/forgot-password', (req, res) => {
+  res.render('forgot-password');
 });
 
 app.post('/signup', async (req, res) => {
@@ -137,7 +143,118 @@ console.log(existingDateIndex,"existing")
   }
 });
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'vigilaakennedy@gmail.com',
+    pass: 'gmhekehkmchvybtw'
+  }
+});
+
+app.post('/forgot-password', async (req, res) => {
+  try {
+    const email = req.body.email;
+    console.log(email,"forgot-password")
+
+    const user = await Collection.findOne({ email });
+
+    if (!user) {
+      return res.send('Email address not found');
+    }
+
+    
+    const resetUrl = `http://localhost:3000/reset-password`;
+    const mailOptions = {
+      from: 'vigilaakennedy@gmail.com', 
+      to: email,
+      subject: 'Password Reset Instructions',
+      text: `Please click on the following link to reset your password: ${resetUrl}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending password reset instructions:', error);
+        return res.send('Failed to send password reset instructions');
+      }
+
+      console.log('Password reset instructions sent:', info.response);
+      res.send('Password reset instructions sent to your email');
+    });
+  } catch (error) {
+    console.error('Error sending password reset instructions:', error);
+    res.send('Internal Server Error');
+  }
+});
+
+app.get('/reset-password', async (req, res) => {
+  try {
+    // const token = req.params.token;
+    const data = {
+      name: req.body.name,
+      email:req.body.email,
+      password: req.body.password,
+      date: req.body.date,
+      content: req.body.content
+    };
+    console.log(data.email,"get")
+    const user = await Collection.findOne({
+     email:data.email
+    });
+
+    if (!user) {
+      return res.send('Invalid or expired reset token');
+    }
+
+    res.render('reset-password');
+  } catch (error) {
+    console.error('Error rendering reset password page:', error);
+    res.send('Internal Server Error');
+  }
+});
+
+app.post('/reset-password', async (req, res) => {
+  try {   
+    const data = {
+      name: req.body.name,
+      email:req.body.email,
+      password: req.body.password,
+      date: req.body.date,
+      content: req.body.content
+    };
+    console.log(data.email,"get")
+    const user = await Collection.findOne({
+     email:data.email   
+    });
+
+    const newPassword = req.body.resetpassword;
+
+  
+    if (!user) {
+      return res.send('Invalid or expired reset token');
+    }
+
+   
+    user.password = newPassword;
+  
+    await user.save();
+
+    res.send('Password reset successful');
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.send('Internal Server Error');
+  }
+});
+// app.listen(3000, () => {
+//   console.log('Server started on port 3000 http://localhost:3000');
+// });
+
+
+// function generateResetToken() {
+//   return crypto.randomBytes(20).toString('hex');
+// }
+
 
 app.listen(3000, () => {
   console.log('Server started on port 3000 http://localhost:3000');
 });
+

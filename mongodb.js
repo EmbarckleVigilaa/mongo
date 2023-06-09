@@ -37,15 +37,6 @@ dates: [
     }
 ]
   
-// date:
-//    {type:Date,
-//     required:true
-// },
-// content:
-//    { type:String,
-//     required:true
-// }
-
 
   });
   

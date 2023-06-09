@@ -1,7 +1,6 @@
 *{
     background-color: rgb(220, 233, 241);
     text-align: center;
-    
 }
 
 .container{
@@ -34,6 +33,9 @@
     right: 10%;
     top: 10rem;
 }
+/* .container input{
+    border-radius: 1rem;
+} */
 #date{
     margin-top: 5%;
 }
