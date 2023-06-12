@@ -95,7 +95,6 @@ app.post('/login', async (req, res) => {
       (dateObj) => dateObj.date === data.date
     );
     console.log(existingDateIndex,"existing")
-// console.log(dateObj.date,"dateobj")
 
     if (existingDateIndex !== -1) {
       res.render('replace-date', { user, date: data.date, content: data.content });
@@ -187,47 +186,26 @@ app.post('/forgot-password', async (req, res) => {
 });
 
 app.get('/reset-password', async (req, res) => {
-  try {
-    // const token = req.params.token;
-    const data = {
-      name: req.body.name,
-      email:req.body.email,
-      password: req.body.password,
-      date: req.body.date,
-      content: req.body.content
-    };
-    console.log(data.email,"get")
-    const user = await Collection.findOne({
-     email:data.email
-    });
-
-    if (!user) {
-      return res.send('Invalid or expired reset token');
-    }
-
+ 
     res.render('reset-password');
-  } catch (error) {
-    console.error('Error rendering reset password page:', error);
-    res.send('Internal Server Error');
-  }
+
 });
 
 app.post('/reset-password', async (req, res) => {
   try {   
     const data = {
-      name: req.body.name,
-      email:req.body.email,
-      password: req.body.password,
-      date: req.body.date,
-      content: req.body.content
+      
+      email:req.body.emailName,
+      password: req.body.resetpassword,
+     
     };
-    console.log(data.email,"get")
+    console.log(data,"get")
     const user = await Collection.findOne({
      email:data.email   
     });
 
-    const newPassword = req.body.resetpassword;
-
+    const newPassword =  await req.body.resetpassword;
+    console.log('np',newPassword)
   
     if (!user) {
       return res.send('Invalid or expired reset token');
@@ -238,23 +216,19 @@ app.post('/reset-password', async (req, res) => {
   
     await user.save();
 
-    res.send('Password reset successful');
+    console.log('Password reset successful');
+    res.redirect('/')
+
+    
   } catch (error) {
     console.error('Error resetting password:', error);
     res.send('Internal Server Error');
   }
 });
-// app.listen(3000, () => {
-//   console.log('Server started on port 3000 http://localhost:3000');
-// });
 
-
-// function generateResetToken() {
-//   return crypto.randomBytes(20).toString('hex');
-// }
 
 
 app.listen(3000, () => {
-  console.log('Server started on port 3000 http://localhost:3000');
+  console.log('Server started on port 3000 http://localhost:3000/');
 });
 
